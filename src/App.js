@@ -1,13 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import './App.css';
 import { Weather } from './Weather';
 
 export const App = () => {
   return (
     <div className="App">
-      <Weather
-
-      />
+      <Weather />
     </div>
   );
 };

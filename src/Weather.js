@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { getAddress } from './api';
+import { getAddress, getCurrentConditions } from './api';
 
 const findPlace = (feature) => feature.place_type.indexOf('place') > -1;
 const findRegion = (feature) => feature.place_type.indexOf('region') > -1;
@@ -17,6 +17,7 @@ const styles = {
     alignContent: 'middle',
     margin: '0 auto',
     flexDirection: 'column',
+    justifyContent: 'center',
   },
   weatherInput: {
     fontSize: 24,
@@ -31,6 +32,14 @@ const styles = {
 export const Weather = () => {
   const [location, setLocation] = useState(null);
   const [locationDetectionFailed, setLocationDetectionFailed] = useState(true);
+
+  const handleSubmit = e => {
+    e.preventDefault();
+    const formData = new FormData(e.currentTarget);
+    const data = new Map(Array.from(formData.entries()))
+    const [place, region] = data.get('place').replace(' ', '').split(',');
+    getCurrentConditions(place, region).then(console.log)
+  }
 
   useEffect(() => {
     const f = async () => {
@@ -52,8 +61,9 @@ export const Weather = () => {
     f();
   }, []);
   return (
-    <form style={styles.container}>
+    <form style={styles.container} onSubmit={handleSubmit}>
       <input
+        name="place"
         style={styles.weatherInput}
         type="text"
         placeholder="Tuscon, AZ"
